@@ -2,27 +2,27 @@ defmodule MatrixPortalWeb.Router do
   use MatrixPortalWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, html: {MatrixPortalWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, html: {MatrixPortalWeb.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/", MatrixPortalWeb do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", PageController, :home
-    get "/redirect", PageController, :token_redirect
-    get "/success", PageController, :success
-    get "/account", PageController, :account
-    post "/account", PageController, :create_account
-    get "/logout", PageController, :logout
+    get("/", PageController, :home)
+    get("/redirect", PageController, :token_redirect)
+    get("/success", PageController, :success)
+    get("/account", PageController, :account)
+    post("/account", PageController, :create_account)
+    get("/logout", PageController, :logout)
   end
 
   # Other scopes may use custom stacks.
@@ -40,10 +40,10 @@ defmodule MatrixPortalWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: MatrixPortalWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: MatrixPortalWeb.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end

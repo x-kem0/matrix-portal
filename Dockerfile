@@ -1,4 +1,4 @@
-FROM debian:trixie-slim
+FROM debian:trixie-slim as build
 ENV DEBIAN_FRONTEND noninteractive
 
 # --------------------------------------------------
@@ -106,13 +106,35 @@ RUN cd matrix_portal_build && \
     mix phx.gen.release && \
     mix release
 
-RUN mv /matrix_portal_build/_build/prod/rel/matrix_portal /matrix_portal
-RUN rm -rf /matrix_portal_build
+# --------------------------------------------------
+# Release container
+# --------------------------------------------------
+
+FROM debian:trixie-slim
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get -y update && apt-get install -y --no-install-recommends \
+    locales \
+    ca-certificates && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y && \
+    rm -rf /tmp/* && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+
+ENV LANG=en_US.UTF-8  
+ENV LANGUAGE=en_US:en  
+ENV LC_ALL=en_US.UTF-8
+
+COPY --from=build /matrix_portal_build/_build/prod/rel/matrix_portal /matrix_portal
 
 RUN useradd -ms /bin/bash service
-
 RUN chown -R service:service /matrix_portal
-
 USER service
+
 CMD ["/matrix_portal/bin/matrix_portal", "start"]
+
 

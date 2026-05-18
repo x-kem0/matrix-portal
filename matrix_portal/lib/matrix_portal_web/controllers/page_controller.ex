@@ -12,11 +12,20 @@ defmodule MatrixPortalWeb.PageController do
     end
   end
 
+  def wait(conn, _params) do
+    Process.sleep(50000)
+
+    conn
+    |> redirect(to: "/success")
+  end
+
   def success(conn, _params) do
     login = get_session(conn, :login)
 
     if login do
-      render(conn, :success, %{
+      conn
+      |> put_resp_header("HX-Redirect", "/success")
+      |> render(:success, %{
         avatar_url: get_session(conn, :avatar_url),
         banner_url: get_session(conn, :banner_url),
         bio: get_session(conn, :bio),
@@ -64,7 +73,9 @@ defmodule MatrixPortalWeb.PageController do
       username = get_session(conn, :user_name)
 
       if Matrix.user_exists?(username) do
-        render(conn, :account_exists, %{
+        conn
+        |> put_resp_header("HX-Redirect", "/account")
+        |> render(:account_exists, %{
           avatar_url: get_session(conn, :avatar_url),
           banner_url: get_session(conn, :banner_url),
           bio: get_session(conn, :bio),
@@ -72,7 +83,11 @@ defmodule MatrixPortalWeb.PageController do
           user_name: username
         })
       else
-        render(conn, :new_account, %{
+        q = URI.encode_query(err: err)
+
+        conn
+        |> put_resp_header("HX-Redirect", "/account?#{q}")
+        |> render(:new_account, %{
           err: err,
           avatar_url: get_session(conn, :avatar_url),
           banner_url: get_session(conn, :banner_url),

@@ -1,6 +1,24 @@
+<style>
+  .htmx-indicator {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .htmx-request.htmx-indicator {
+    opacity: 1;
+    pointer-events: auto;
+  }
+</style>
+<script src="/js/htmx.min.js">
+</script>
 <div class="flex justify-center items-center h-dvh bg-base-200 w-full">
   <a href="https://github.com/x-kem0/matrix-portal" class="absolute right-4 bottom-4">
-  <svg xmlns="http://www.w3.org/2000/svg" width="22pt" height="22pt" viewBox="0 0 78 78"><path fill="#896e61" transform="translate(10 10) rotate(-45 29 29)" d="M5,58c-2.76142,0 -5,-2.23858 -5,-5v-48c0,-2.76142 2.23858,-5 5,-5h33v12.54404c-2.06553,0.94801 -3.5,3.03446 -3.5,5.45596c0,0.73514 0.13221,1.43941 0.37415,2.09031l-15.28384,15.28384c-0.6509,-0.24194 -1.35517,-0.37415 -2.09031,-0.37415c-3.31371,0 -6,2.68629 -6,6c0,3.31371 2.68629,6 6,6c3.31371,0 6,-2.68629 6,-6c0,-0.73514 -0.13221,-1.43941 -0.37415,-2.09031l14.87415,-14.87415l0,11.50851c-2.06553,0.94801 -3.5,3.03446 -3.5,5.45596c0,3.31371 2.68629,6 6,6c3.31371,0 6,-2.68629 6,-6c0,-2.42149 -1.43447,-4.50795 -3.5,-5.45596l0,-12.08808c2.06553,-0.94801 3.5,-3.03446 3.5,-5.45596c0,-2.42149 -1.43447,-4.50795 -3.5,-5.45596l0,-12.54404h10c2.76142,0 5,2.23858 5,5v48c0,2.76142 -2.23858,5 -5,5z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="22pt" height="22pt" viewBox="0 0 78 78">
+      <path
+        fill="#896e61"
+        transform="translate(10 10) rotate(-45 29 29)"
+        d="M5,58c-2.76142,0 -5,-2.23858 -5,-5v-48c0,-2.76142 2.23858,-5 5,-5h33v12.54404c-2.06553,0.94801 -3.5,3.03446 -3.5,5.45596c0,0.73514 0.13221,1.43941 0.37415,2.09031l-15.28384,15.28384c-0.6509,-0.24194 -1.35517,-0.37415 -2.09031,-0.37415c-3.31371,0 -6,2.68629 -6,6c0,3.31371 2.68629,6 6,6c3.31371,0 6,-2.68629 6,-6c0,-0.73514 -0.13221,-1.43941 -0.37415,-2.09031l14.87415,-14.87415l0,11.50851c-2.06553,0.94801 -3.5,3.03446 -3.5,5.45596c0,3.31371 2.68629,6 6,6c3.31371,0 6,-2.68629 6,-6c0,-2.42149 -1.43447,-4.50795 -3.5,-5.45596l0,-12.08808c2.06553,-0.94801 3.5,-3.03446 3.5,-5.45596c0,-2.42149 -1.43447,-4.50795 -3.5,-5.45596l0,-12.54404h10c2.76142,0 5,2.23858 5,5v48c0,2.76142 -2.23858,5 -5,5z"
+      />
+    </svg>
   </a>
   <div class="flex flex-col min-w-[75%] xl:min-w-[35%]">
     <%= if @banner_url do %>
@@ -10,7 +28,7 @@
       />
     <% end %>
     <div class="bg-base-300 items-center flex flex-col gap-1 p-5 rounded-lg">
-      <div class="h-16 w-16 rounded-full bg-green-700 overflow-hidden">
+      <div class="h-16 w-16 rounded-full overflow-hidden">
         <img class="object-cover" src={@avatar_url} />
       </div>
       <div class="select-none">
@@ -34,7 +52,61 @@
           <span>{@err}</span>
         </div>
       <% end %>
-      <form class="form w-full" method="POST">
+      <form class="form w-full relative" method="post" hx-post="/account" hx-indicator="#ind">
+        <div
+          id="ind"
+          class="htmx-indicator flex items-center justify-center absolute w-full h-full bg-base-300 z-10"
+        >
+          <svg
+            width="36"
+            height="36"
+            fill="#ff9c12"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <style>
+              .spinner_OSmW{transform-origin:center;animation:spinner_T6mA .75s step-end infinite}@keyframes spinner_T6mA{8.3%{transform:rotate(30deg)}16.6%{transform:rotate(60deg)}25%{transform:rotate(90deg)}33.3%{transform:rotate(120deg)}41.6%{transform:rotate(150deg)}50%{transform:rotate(180deg)}58.3%{transform:rotate(210deg)}66.6%{transform:rotate(240deg)}75%{transform:rotate(270deg)}83.3%{transform:rotate(300deg)}91.6%{transform:rotate(330deg)}100%{transform:rotate(360deg)}}
+            </style>
+            <g class="spinner_OSmW">
+              <rect x="11" y="1" width="2" height="5" opacity=".14" /><rect
+                x="11"
+                y="1"
+                width="2"
+                height="5"
+                transform="rotate(30 12 12)"
+                opacity=".29"
+              /><rect
+                x="11"
+                y="1"
+                width="2"
+                height="5"
+                transform="rotate(60 12 12)"
+                opacity=".43"
+              /><rect
+                x="11"
+                y="1"
+                width="2"
+                height="5"
+                transform="rotate(90 12 12)"
+                opacity=".57"
+              /><rect
+                x="11"
+                y="1"
+                width="2"
+                height="5"
+                transform="rotate(120 12 12)"
+                opacity=".71"
+              /><rect
+                x="11"
+                y="1"
+                width="2"
+                height="5"
+                transform="rotate(150 12 12)"
+                opacity=".86"
+              /><rect x="11" y="1" width="2" height="5" transform="rotate(180 12 12)" />
+            </g>
+          </svg>
+        </div>
         <input type="hidden" name="_csrf_token" value={Phoenix.Controller.get_csrf_token()} />
         <fieldset class="fieldset">
           <label class="label">Username</label>
