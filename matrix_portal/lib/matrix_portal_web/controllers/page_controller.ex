@@ -8,7 +8,7 @@ defmodule MatrixPortalWeb.PageController do
     if login do
       redirect(conn, to: "/account")
     else
-      render(conn, :home)
+      render(conn, :home, page_title: "Login")
     end
   end
 
@@ -30,7 +30,27 @@ defmodule MatrixPortalWeb.PageController do
         banner_url: get_session(conn, :banner_url),
         bio: get_session(conn, :bio),
         display_name: get_session(conn, :display_name),
-        user_name: get_session(conn, :user_name)
+        user_name: get_session(conn, :user_name),
+        page_title: "Account Created"
+      })
+    else
+      redirect(conn, to: "/")
+    end
+  end
+
+  def password_reset_success(conn, _params) do
+    login = get_session(conn, :login)
+
+    if login do
+      conn
+      |> put_resp_header("HX-Redirect", "/password_reset_success")
+      |> render(:password_reset_success, %{
+        avatar_url: get_session(conn, :avatar_url),
+        banner_url: get_session(conn, :banner_url),
+        bio: get_session(conn, :bio),
+        display_name: get_session(conn, :display_name),
+        user_name: get_session(conn, :user_name),
+        page_title: "Password Updated"
       })
     else
       redirect(conn, to: "/")
@@ -80,7 +100,8 @@ defmodule MatrixPortalWeb.PageController do
           banner_url: get_session(conn, :banner_url),
           bio: get_session(conn, :bio),
           display_name: get_session(conn, :display_name),
-          user_name: username
+          user_name: username,
+          page_title: "Manage Account"
         })
       else
         q = URI.encode_query(err: err)
@@ -93,7 +114,8 @@ defmodule MatrixPortalWeb.PageController do
           banner_url: get_session(conn, :banner_url),
           bio: get_session(conn, :bio),
           display_name: get_session(conn, :display_name),
-          user_name: username
+          user_name: username,
+          page_title: "New Account"
         })
       end
     else
@@ -161,6 +183,85 @@ defmodule MatrixPortalWeb.PageController do
 
         conn
         |> redirect(to: "/account?#{q}")
+    end
+  end
+
+  def password_reset(conn, params) do
+    err = Map.get(params, "err")
+    login = get_session(conn, :login)
+
+    if login do
+      username = get_session(conn, :user_name)
+
+      if Matrix.user_exists?(username) do
+        conn
+        |> put_resp_header("HX-Redirect", "/password_reset")
+        |> render(:password_reset, %{
+          err: nil,
+          avatar_url: get_session(conn, :avatar_url),
+          banner_url: get_session(conn, :banner_url),
+          bio: get_session(conn, :bio),
+          display_name: get_session(conn, :display_name),
+          user_name: username,
+          page_title: "Password Reset"
+        })
+      else
+        q = URI.encode_query(err: err)
+
+        conn
+        |> put_resp_header("HX-Redirect", "/password_reset?#{q}")
+        |> render(:password_reset, %{
+          err: err,
+          avatar_url: get_session(conn, :avatar_url),
+          banner_url: get_session(conn, :banner_url),
+          bio: get_session(conn, :bio),
+          display_name: get_session(conn, :display_name),
+          user_name: username,
+          page_title: "Password Reset"
+        })
+      end
+    else
+      conn
+      |> put_flash(:error, "Invalid session")
+      |> redirect(to: "/")
+    end
+  end
+
+  def post_password_reset(conn, params) do
+    %{
+      "password" => password,
+      "password_conf" => password_conf
+    } = params
+
+    with_defer do
+      if password != password_conf do
+        throw_err({:error, "Passwords do not match"})
+      end
+
+      if password == "" do
+        throw_err({:error, "Passwords may not be blank!"})
+      end
+
+      username = get_session(conn, :user_name)
+
+      Matrix.change_password(username, password)
+    end
+    |> case do
+      :ok ->
+        conn
+        |> redirect(to: "/password_reset_success")
+
+      {:error, message} ->
+        q = URI.encode_query(err: message)
+
+        conn
+        |> redirect(to: "/password_reset?#{q}")
+
+      _ ->
+        q = URI.encode_query(err: "Internal server error, contact an admin!")
+
+        conn
+        |> redirect(to: "/password_reset?#{q}")
     end
   end
 end

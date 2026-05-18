@@ -50,6 +50,18 @@ defmodule Matrix do
     access_token
   end
 
+  def change_password(username, password) do
+    auth_post(
+      "/_synapse/admin/v1/reset_password/#{fmt_username(username)}",
+      %{
+        new_password: password,
+        logout_devices: true
+      }
+    )
+
+    :ok
+  end
+
   def create_account(
         username: username,
         password: password,

@@ -21,6 +21,9 @@ defmodule MatrixPortalWeb.Router do
     get("/redirect", PageController, :token_redirect)
     get("/success", PageController, :success)
     get("/account", PageController, :account)
+    get("/password_reset", PageController, :password_reset)
+    post("/password_reset", PageController, :post_password_reset)
+    get("/password_reset_success", PageController, :password_reset_success)
     post("/account", PageController, :create_account)
     get("/logout", PageController, :logout)
   end
