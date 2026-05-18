@@ -1,0 +1,20 @@
+services:
+  matrix_portal:
+    image: matrix_portal
+    ports:
+      - 4000:4000
+    environment:
+      - SECRET_KEY_BASE=
+      - MISSKEY_HOST=
+      - MISSKEY_NAME=
+      - MATRIX_HOST=
+      - MATRIX_CLIENT=
+      - MATRIX_DELEGATE=
+      - MATRIX_ADMIN_USER=
+      - MATRIX_ADMIN_PASS=
+      - MATRIX_PSK=
+      - MATRIX_JOINS=
+      - APP_HOST=
+      - APP_NAME=
+      - APP_ICON_URL=
+    restart: unless-stopped

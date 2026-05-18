@@ -1,0 +1,40 @@
+# The directory Mix will write compiled artifacts to.
+matrix_portal/_build
+
+matrix_portal/.elixir_ls
+matrix_portal/.gitignore
+
+# If you run "mix test --cover", coverage assets end up here.
+matrix_portal/cover/
+
+# The directory Mix downloads your dependencies sources to.
+matrix_portal/deps/
+
+# Where 3rd-party dependencies like ExDoc output generated docs.
+matrix_portal/doc/
+
+# Ignore .fetch files in case you like to edit your project deps locally.
+matrix_portal/.fetch
+
+# If the VM crashes, it generates a dump, let's ignore it too.
+matrix_portal/erl_crash.dump
+
+# Also ignore archive artifacts (built via "mix archive.build").
+matrix_portal/*.ez
+
+# Temporary files, for example, from tests.
+matrix_portal/tmp/
+
+# Ignore package tarball (built via "mix hex.build").
+matrix_portal/matrix_portal-*.tar
+
+# Ignore assets that are produced by build tools.
+matrix_portal/priv/static/assets/
+
+# Ignore digested assets cache.
+matrix_portal/priv/static/cache_manifest.json
+
+# In case you use Node.js/matrix_portal/npm, you want to ignore these.
+matrix-portal/npm-debug.log
+matrix_portal/assets/node_modules/
+

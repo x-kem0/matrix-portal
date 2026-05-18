@@ -1,0 +1,9 @@
+<Layouts.flash_group flash={@flash} />
+<div class="flex justify-center items-center h-dvh bg-base-200 w-full">
+  <div class="bg-base-300 items-center flex flex-col gap-2 p-5 rounded-lg">
+    <div class="select-none">{Cfg.get(:app_name)}</div>
+    <a class="btn btn-primary" href={Misskey.miauth_url()}>
+      {"Sign in via #{Cfg.get(:misskey_name)}"}
+    </a>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<div class="flex justify-center items-center h-dvh bg-base-200 w-full">
+  <div class="flex flex-col min-w-[75%] xl:min-w-[35%]">
+    <%= if @banner_url do %>
+      <div
+        class="object-cover h-full w-full w-10 aspect-[2.5] -mb-4 rounded-t-lg"
+        style={"background: url(\"#{@banner_url}\"); background-position: center; background-size: cover;"}
+      />
+    <% end %>
+    <div class="bg-base-300 items-center flex flex-col gap-1 p-5 rounded-lg">
+      <div class="h-16 w-16 rounded-full bg-green-700 overflow-hidden">
+        <img class="object-cover" src={@avatar_url} />
+      </div>
+      <div class="select-none">
+        Hello, <span class="font-bold">{@display_name || @user_name}</span>!
+      </div>
+      <%= if @err do %>
+        <div role="alert" class="alert mt-2 alert-warning">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+          <span>{@err}</span>
+        </div>
+      <% end %>
+      <form class="form w-full" method="POST">
+        <input type="hidden" name="_csrf_token" value={Phoenix.Controller.get_csrf_token()} />
+        <fieldset class="fieldset">
+          <label class="label">Username</label>
+          <input
+            class="input w-full"
+            type="input"
+            value={"@#{@user_name}:#{Cfg.get(:matrix_delegate)}"}
+            disabled
+            autocomplete="off"
+          />
+          <label class="label">Display Name</label>
+          <input
+            name="display_name"
+            class="input w-full"
+            type="input"
+            value={@display_name}
+            autocomplete="off"
+          />
+          <label class="label">Password</label>
+          <input
+            name="password"
+            class="input w-full"
+            type="password"
+            placeholder="Password"
+            autocomplete="off"
+          />
+
+          <label class="label">Password Confirmation</label>
+          <input
+            name="password_conf"
+            class="input w-full"
+            type="password"
+            placeholder="Password Confirmation"
+            autocomplete="off"
+          />
+
+          <button class="btn btn-primary mt-4">Create Matrix Account</button>
+          <a href="/logout" class="btn btn-neutral mt-4">Sign Out</a>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
