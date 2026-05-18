@@ -35,3 +35,5 @@ matrix_portal-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# dev script
+start.fish

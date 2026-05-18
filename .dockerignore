@@ -37,4 +37,3 @@ matrix_portal/priv/static/cache_manifest.json
 # In case you use Node.js/matrix_portal/npm, you want to ignore these.
 matrix-portal/npm-debug.log
 matrix_portal/assets/node_modules/
-

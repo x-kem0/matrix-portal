@@ -107,6 +107,7 @@ RUN cd matrix_portal_build && \
     mix release
 
 RUN mv /matrix_portal_build/_build/prod/rel/matrix_portal /matrix_portal
+RUN rm -rf /matrix_portal_build
 
 RUN useradd -ms /bin/bash service
 
